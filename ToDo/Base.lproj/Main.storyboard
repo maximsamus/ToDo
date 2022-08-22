@@ -30,7 +30,14 @@
                             <outlet property="delegate" destination="tMt-h2-t7q" id="3TL-lX-hfs"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="To Do" id="ncU-gd-cwE" propertyAccessControl="none"/>
+                    <navigationItem key="navigationItem" title="To Do" id="ncU-gd-cwE" propertyAccessControl="none">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ben-Dt-q7W">
+                            <color key="tintColor" systemColor="systemPinkColor"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="tMt-h2-t7q" id="Yt7-1Z-c9n"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2U-O5-AQl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -70,6 +77,9 @@
         </systemColor>
         <systemColor name="systemMintColor">
             <color red="0.0" green="0.7803921568627451" blue="0.74509803921568629" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
