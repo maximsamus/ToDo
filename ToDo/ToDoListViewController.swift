@@ -9,10 +9,12 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var items = ["1", "3", "5"]
+    let userDefaults = UserDefaults.standard
+    var tasks = ["1", "3", "5"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tasks = userDefaults.array(forKey: "ToDoTasks") as? [String] ?? []
     }
     
     // MARK: - Add New Task
@@ -26,8 +28,9 @@ class ToDoListViewController: UITableViewController {
             preferredStyle: .alert
         )
         
-        let action = UIAlertAction(title: "Add item", style: .default) { action in
-            self.items.append(textField.text ?? "")
+        let action = UIAlertAction(title: "Add item", style: .default) { [self] action in
+            self.tasks.append(textField.text ?? "")
+            userDefaults.set(tasks, forKey: "ToDoTasks")
             self.tableView.reloadData()
         }
         
@@ -44,12 +47,12 @@ class ToDoListViewController: UITableViewController {
 extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        items.count
+        tasks.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
-        cell.textLabel?.text = items[indexPath.row]
+        cell.textLabel?.text = tasks[indexPath.row]
         return cell
     }
     
