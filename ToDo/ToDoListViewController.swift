@@ -9,27 +9,37 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-//    let userDefaults = UserDefaults.standard
-    
     let dataFilePath = FileManager.default.urls(
         for: .documentDirectory,
         in: .userDomainMask
-    ).first?.appendingPathComponent("Tasks.plist") 
-//    print(dataFilePath ?? "")
-
+    ).first?.appendingPathComponent("Tasks.plist")
+    
     var tasks = [Task]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-        
-        let newTask = Task(title: "Test", done: false)
-        tasks.append(newTask)
-        
-        let newTask2 = Task(title: "Test2", done: false)
-        tasks.append(newTask2)
-        
-//        tasks = userDefaults.array(forKey: "ToDoTasks") as? [Task] ?? []
+        loadTask()
+    }
+    
+    private func saveTask() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(tasks)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print(error.localizedDescription)
+        }
+        self.tableView.reloadData()
+    }
+    
+    private func loadTask() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                tasks = try decoder.decode([Task].self, from: data)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     // MARK: - Add New Task
@@ -43,20 +53,10 @@ class ToDoListViewController: UITableViewController {
             preferredStyle: .alert
         )
         
-        let action = UIAlertAction(title: "Add item", style: .default) { [self] action in
-            
+        let action = UIAlertAction(title: "Add item", style: .default) { action in
             let newTask = Task(title: textField.text ?? "", done: false)
-//            newTask.title = textField.text
             self.tasks.append(newTask)
-//            userDefaults.set(tasks, forKey: "ToDoTasks")
-            let encoder = PropertyListEncoder()
-            do {
-            let data = try encoder.encode(tasks)
-                try data.write(to: dataFilePath!)
-            } catch {
-                print(error.localizedDescription)
-            }
-            self.tableView.reloadData()
+            self.saveTask()
         }
         
         alert.addTextField { alertTextField in
@@ -81,33 +81,14 @@ extension ToDoListViewController {
         
         cell.textLabel?.text = item.title
         cell.accessoryType = item.done ? .checkmark : .none
-        
-//        if item.done == true {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
         return cell
     }
-    
     // MARK: - Delegate Method didSelectRowAt
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tasks[indexPath.row].done = !tasks[indexPath.row].done
-        
-//        if tasks[indexPath.row].done == false {
-//            tasks[indexPath.row].done = true
-//        } else {
-//            tasks[indexPath.row].done = false
-//        }
-        
-//        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        } else {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-//        }
-        tableView.reloadData()
+        saveTask()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
