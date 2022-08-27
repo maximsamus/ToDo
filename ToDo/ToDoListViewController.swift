@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
     
@@ -14,33 +15,33 @@ class ToDoListViewController: UITableViewController {
         in: .userDomainMask
     ).first?.appendingPathComponent("Tasks.plist")
     
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var tasks = [Task]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTask()
+//        loadTask()
     }
     
     private func saveTask() {
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(tasks)
-            try data.write(to: dataFilePath!)
+            try context.save()
         } catch {
             print(error.localizedDescription)
         }
         self.tableView.reloadData()
     }
     
-    private func loadTask() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                tasks = try decoder.decode([Task].self, from: data)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
+//    private func loadTask() {
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decoder = PropertyListDecoder()
+//            do {
+//                tasks = try decoder.decode([Task].self, from: data)
+//            } catch {
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
     
     // MARK: - Add New Task
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -52,9 +53,10 @@ class ToDoListViewController: UITableViewController {
             message: "",
             preferredStyle: .alert
         )
-        
         let action = UIAlertAction(title: "Add item", style: .default) { action in
-            let newTask = Task(title: textField.text ?? "", done: false)
+
+            let newTask = Task(context: self.context)
+            newTask.done = false
             self.tasks.append(newTask)
             self.saveTask()
         }
