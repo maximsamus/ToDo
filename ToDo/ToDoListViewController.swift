@@ -10,17 +10,12 @@ import CoreData
 
 class ToDoListViewController: UITableViewController {
     
-    let dataFilePath = FileManager.default.urls(
-        for: .documentDirectory,
-        in: .userDomainMask
-    ).first?.appendingPathComponent("Tasks.plist")
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var tasks = [Task]()
     override func viewDidLoad() {
         super.viewDidLoad()
-//        loadTask()
+        loadTask()
     }
     
     private func saveTask() {
@@ -32,16 +27,14 @@ class ToDoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-//    private func loadTask() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//            do {
-//                tasks = try decoder.decode([Task].self, from: data)
-//            } catch {
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
+    private func loadTask() {
+        let request: NSFetchRequest<Task> = Task.fetchRequest()
+        do {
+            tasks = try context.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     // MARK: - Add New Task
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -54,8 +47,9 @@ class ToDoListViewController: UITableViewController {
             preferredStyle: .alert
         )
         let action = UIAlertAction(title: "Add item", style: .default) { action in
-
+            
             let newTask = Task(context: self.context)
+            newTask.title = textField.text
             newTask.done = false
             self.tasks.append(newTask)
             self.saveTask()
@@ -69,8 +63,6 @@ class ToDoListViewController: UITableViewController {
         alert.addAction(action)
         present(alert, animated: true)
     }
-    
-    
 }
 
 extension ToDoListViewController {
