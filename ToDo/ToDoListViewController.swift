@@ -27,13 +27,13 @@ class ToDoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    private func loadTask() {
-        let request: NSFetchRequest<Task> = Task.fetchRequest()
+    private func loadTask(with request: NSFetchRequest<Task> = Task.fetchRequest()) {
         do {
             tasks = try context.fetch(request)
         } catch {
             print(error.localizedDescription)
         }
+        self.tableView.reloadData()
     }
     
     // MARK: - Add New Task
@@ -64,6 +64,7 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true)
     }
 }
+// MARK: - Table View
 
 extension ToDoListViewController {
     
@@ -83,9 +84,32 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        //        context.delete(tasks[indexPath.row])
+        //        tasks.remove(at: indexPath.row)
+        
         tasks[indexPath.row].done = !tasks[indexPath.row].done
         saveTask()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+// MARK: - Search Bar
 
+extension ToDoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Task> = Task.fetchRequest()
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadTask(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadTask()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
