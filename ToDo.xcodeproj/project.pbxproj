@@ -68,7 +68,6 @@
 				F79ED35E28B10BE700F85235 /* Assets.xcassets */,
 				F79ED36028B10BE700F85235 /* LaunchScreen.storyboard */,
 				F79ED36328B10BE700F85235 /* Info.plist */,
-				F79ED35B28B10BE500F85235 /* ToDo.xcdatamodeld */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -77,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				F7E134D028B64E880087183A /* Task.swift */,
+				F79ED35B28B10BE500F85235 /* ToDo.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
