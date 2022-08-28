@@ -16,25 +16,25 @@ class CategoryViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTask()
+        loadCategory()
     }
     
-    private func saveTask() {
+    private func saveCategory() {
         do {
             try context.save()
         } catch {
             print(error.localizedDescription)
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
-    private func loadTask(with request: NSFetchRequest<CategoryOfTasks> = CategoryOfTasks.fetchRequest()) {
+    private func loadCategory(with request: NSFetchRequest<CategoryOfTasks> = CategoryOfTasks.fetchRequest()) {
         do {
             tasksCategories = try context.fetch(request)
         } catch {
             print(error.localizedDescription)
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -51,7 +51,7 @@ class CategoryViewController: UITableViewController {
             let groupTask = CategoryOfTasks(context: self.context)
             groupTask.name = textField.text
             self.tasksCategories.append(groupTask)
-            self.saveTask()
+            self.saveCategory()
         }
         
         alert.addTextField { alertTextField in
@@ -73,9 +73,22 @@ extension CategoryViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        let item = tasksCategories[indexPath.row]
         
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = tasksCategories[indexPath.row].name
         return cell
+    }
+}
+
+// MARK: - Table View Data Source Methods
+extension CategoryViewController {
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let taskVS = segue.destination as? ToDoListViewController else { return }
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        taskVS.selectedCategory = tasksCategories[indexPath.row]
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToTasks", sender: self)
     }
 }

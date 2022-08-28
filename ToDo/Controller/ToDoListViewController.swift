@@ -13,9 +13,14 @@ class ToDoListViewController: UITableViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var tasks = [Task]()
+    var selectedCategory: CategoryOfTasks? {
+        didSet {
+            loadTask()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTask()
     }
     
     private func saveTask() {
@@ -24,7 +29,7 @@ class ToDoListViewController: UITableViewController {
         } catch {
             print(error.localizedDescription)
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     private func loadTask(with request: NSFetchRequest<Task> = Task.fetchRequest()) {
@@ -33,7 +38,7 @@ class ToDoListViewController: UITableViewController {
         } catch {
             print(error.localizedDescription)
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     // MARK: - Add New Task
@@ -51,6 +56,7 @@ class ToDoListViewController: UITableViewController {
             let newTask = Task(context: self.context)
             newTask.title = textField.text
             newTask.done = false
+            newTask.parentCategory = self.selectedCategory
             self.tasks.append(newTask)
             self.saveTask()
         }
@@ -74,10 +80,9 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
-        let item = tasks[indexPath.row]
         
-        cell.textLabel?.text = item.title
-        cell.accessoryType = item.done ? .checkmark : .none
+        cell.textLabel?.text = tasks[indexPath.row].title
+        cell.accessoryType = tasks[indexPath.row].done ? .checkmark : .none
         return cell
     }
     // MARK: - Delegate Method didSelectRowAt
