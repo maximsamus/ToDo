@@ -65,7 +65,6 @@
 				F7ECC13B28BB4C5900756CB8 /* Controller */,
 				F7ECC13D28BB4C8800756CB8 /* App */,
 				F79ED35E28B10BE700F85235 /* Assets.xcassets */,
-				F79ED36328B10BE700F85235 /* Info.plist */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -99,6 +98,7 @@
 		F7ECC13D28BB4C8800756CB8 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				F79ED36328B10BE700F85235 /* Info.plist */,
 				F79ED35228B10BE500F85235 /* AppDelegate.swift */,
 				F79ED35428B10BE500F85235 /* SceneDelegate.swift */,
 			);
@@ -329,7 +329,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ASKBC27NSG;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ToDo/Info.plist;
+				INFOPLIST_FILE = ToDo/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -357,7 +357,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ASKBC27NSG;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ToDo/Info.plist;
+				INFOPLIST_FILE = ToDo/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
