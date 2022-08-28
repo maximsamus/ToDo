@@ -32,7 +32,16 @@ class ToDoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    private func loadTask(with request: NSFetchRequest<Task> = Task.fetchRequest()) {
+    private func loadTask(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES[cd] %@", selectedCategory?.name ?? "")
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
         do {
             tasks = try context.fetch(request)
         } catch {
@@ -89,9 +98,6 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //        context.delete(tasks[indexPath.row])
-        //        tasks.remove(at: indexPath.row)
-        
         tasks[indexPath.row].done = !tasks[indexPath.row].done
         saveTask()
         tableView.deselectRow(at: indexPath, animated: true)
@@ -103,10 +109,10 @@ extension ToDoListViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let request: NSFetchRequest<Task> = Task.fetchRequest()
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadTask(with: request)
+        loadTask(with: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
