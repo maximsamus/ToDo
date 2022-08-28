@@ -42,11 +42,11 @@ class ToDoListViewController: UITableViewController {
         var textField = UITextField()
         
         let alert = UIAlertController(
-            title: "Add new task",
+            title: "Add a new task",
             message: "",
             preferredStyle: .alert
         )
-        let action = UIAlertAction(title: "Add item", style: .default) { action in
+        let action = UIAlertAction(title: "Add a new task", style: .default) { action in
             
             let newTask = Task(context: self.context)
             newTask.title = textField.text

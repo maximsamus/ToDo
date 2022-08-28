@@ -9,6 +9,45 @@
     </dependencies>
     <scenes>
         <!--To Do-->
+        <scene sceneID="8zr-HH-NDZ">
+            <objects>
+                <tableViewController id="NWZ-sN-tle" customClass="CategoryViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="1P6-C0-gTx">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryCell" id="Yp2-a7-P8j">
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Yp2-a7-P8j" id="rVx-xj-M9E">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="NWZ-sN-tle" id="IRu-7B-rX2"/>
+                            <outlet property="delegate" destination="NWZ-sN-tle" id="NrC-i3-EZn"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="To Do" id="cEe-LV-6ua">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="toL-Bg-Z8s">
+                            <color key="tintColor" systemColor="tintColor"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="NWZ-sN-tle" id="JJN-iK-mP2"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="tMt-h2-t7q" kind="show" identifier="goToTasks" id="d42-Ao-mwi"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kQU-TZ-4oz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-993" y="73"/>
+        </scene>
+        <!--Tasks-->
         <scene sceneID="Z4A-L8-Cc9">
             <objects>
                 <tableViewController id="tMt-h2-t7q" customClass="ToDoListViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -39,9 +78,9 @@
                             <outlet property="delegate" destination="tMt-h2-t7q" id="3TL-lX-hfs"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="To Do" id="ncU-gd-cwE" propertyAccessControl="none">
+                    <navigationItem key="navigationItem" title="Tasks" id="ncU-gd-cwE" propertyAccessControl="none">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ben-Dt-q7W">
-                            <color key="tintColor" systemColor="systemPinkColor"/>
+                            <color key="tintColor" systemColor="tintColor"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="tMt-h2-t7q" id="Yt7-1Z-c9n"/>
                             </connections>
@@ -50,7 +89,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2U-O5-AQl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-845" y="73"/>
+            <point key="canvasLocation" x="-20" y="73"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="isY-CL-5qq">
@@ -72,7 +111,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="tMt-h2-t7q" kind="relationship" relationship="rootViewController" id="yAt-Hy-R7o"/>
+                        <segue destination="NWZ-sN-tle" kind="relationship" relationship="rootViewController" id="LWd-nu-txs"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QIC-F8-lIP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -90,9 +129,6 @@
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
