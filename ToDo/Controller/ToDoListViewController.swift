@@ -6,13 +6,12 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class ToDoListViewController: UITableViewController {
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    var tasks = [Task]()
+    let realm = try! Realm()
+    var tasks: Results<Task>?
     var selectedCategory: CategoryOfTasks? {
         didSet {
             loadTask()
@@ -23,30 +22,18 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
     }
     
-    private func saveTask() {
-        do {
-            try context.save()
-        } catch {
-            print(error.localizedDescription)
-        }
-        tableView.reloadData()
-    }
+//    private func saveTask() {
+//        do {
+//            try context.save()
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        tableView.reloadData()
+//    }
     
-    private func loadTask(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
+    private func loadTask() {
         
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES[cd] %@", selectedCategory?.name ?? "")
-        
-        if let additionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-        
-        do {
-            tasks = try context.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+        tasks = selectedCategory?.task.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
     }
     
@@ -62,12 +49,14 @@ class ToDoListViewController: UITableViewController {
         )
         let action = UIAlertAction(title: "Add a new task", style: .default) { action in
             
-            let newTask = Task(context: self.context)
-            newTask.title = textField.text
-            newTask.done = false
-            newTask.parentCategory = self.selectedCategory
-            self.tasks.append(newTask)
-            self.saveTask()
+            //            let newTask = Task(context: self.context)
+            //            newTask.title = textField.text
+            //            newTask.done = false
+            //            newTask.parentCategory = self.selectedCategory
+            //            self.tasks.append(newTask)
+            //            self.saveTask()
+            self.tableView.reloadData()
+
         }
         
         alert.addTextField { alertTextField in
@@ -84,43 +73,47 @@ class ToDoListViewController: UITableViewController {
 extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tasks.count
+        tasks?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
         
-        cell.textLabel?.text = tasks[indexPath.row].title
-        cell.accessoryType = tasks[indexPath.row].done ? .checkmark : .none
+        if let item = tasks?[indexPath.row] {
+            cell.textLabel?.text = item.title
+            cell.accessoryType = item.done ? .checkmark : .none
+        } else {
+            cell.textLabel?.text = "No tasks added"
+        }
         return cell
     }
     // MARK: - Delegate Method didSelectRowAt
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tasks[indexPath.row].done = !tasks[indexPath.row].done
-        saveTask()
+//        tasks[indexPath.row].done = !tasks[indexPath.row].done
+//        saveTask()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 // MARK: - Search Bar
 
-extension ToDoListViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request: NSFetchRequest<Task> = Task.fetchRequest()
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadTask(with: request, predicate: predicate)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count == 0 {
-            loadTask()
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
-        }
-    }
-}
+//extension ToDoListViewController: UISearchBarDelegate {
+//
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        let request: NSFetchRequest<Task> = Task.fetchRequest()
+//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadTask(with: request, predicate: predicate)
+//    }
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if searchBar.text?.count == 0 {
+//            loadTask()
+//            DispatchQueue.main.async {
+//                searchBar.resignFirstResponder()
+//            }
+//        }
+//    }
+//}

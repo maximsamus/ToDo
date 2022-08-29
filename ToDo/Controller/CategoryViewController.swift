@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var tasksCategories = [CategoryOfTasks]()
+    let realm = try! Realm()
+    var tasksCategories: Results<CategoryOfTasks>?
     
     
     override func viewDidLoad() {
@@ -19,21 +19,20 @@ class CategoryViewController: UITableViewController {
         loadCategory()
     }
     
-    private func saveCategory() {
+    private func save(category: CategoryOfTasks) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print(error.localizedDescription)
         }
         tableView.reloadData()
     }
     
-    private func loadCategory(with request: NSFetchRequest<CategoryOfTasks> = CategoryOfTasks.fetchRequest()) {
-        do {
-            tasksCategories = try context.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+    private func loadCategory() {
+        
+        tasksCategories = realm.objects(CategoryOfTasks.self)
         tableView.reloadData()
     }
     
@@ -48,10 +47,9 @@ class CategoryViewController: UITableViewController {
         )
         let action = UIAlertAction(title: "Add a new task group", style: .default) { action in
             
-            let groupTask = CategoryOfTasks(context: self.context)
-            groupTask.name = textField.text
-            self.tasksCategories.append(groupTask)
-            self.saveCategory()
+            let newTaskCategory = CategoryOfTasks()
+            newTaskCategory.name = textField.text ?? ""
+            self.save(category: newTaskCategory)
         }
         
         alert.addTextField { alertTextField in
@@ -68,13 +66,13 @@ class CategoryViewController: UITableViewController {
 extension CategoryViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tasksCategories.count
+        tasksCategories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        cell.textLabel?.text = tasksCategories[indexPath.row].name
+        cell.textLabel?.text = tasksCategories?[indexPath.row].name ?? "No categories added"
         return cell
     }
 }
@@ -85,7 +83,7 @@ extension CategoryViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let taskVS = segue.destination as? ToDoListViewController else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
-        taskVS.selectedCategory = tasksCategories[indexPath.row]
+        taskVS.selectedCategory = tasksCategories?[indexPath.row]
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
