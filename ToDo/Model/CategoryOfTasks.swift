@@ -9,6 +9,6 @@ import Foundation
 import RealmSwift
 
 class CategoryOfTasks: Object {
-    @Persisted var name = ""
+    @objc dynamic var name = ""
     let task = List<Task>()
 }

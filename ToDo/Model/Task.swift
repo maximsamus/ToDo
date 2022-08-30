@@ -9,8 +9,9 @@ import Foundation
 import RealmSwift
 
 class Task: Object {
-    @Persisted var title = ""
-    @Persisted var done = false
+    @objc dynamic var title = ""
+    @objc dynamic var done = false
     var parentCategory = LinkingObjects(fromType: CategoryOfTasks.self, property: "task")
 }
+
 

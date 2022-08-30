@@ -22,15 +22,6 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
     }
     
-//    private func saveTask() {
-//        do {
-//            try context.save()
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//        tableView.reloadData()
-//    }
-    
     private func loadTask() {
         
         tasks = selectedCategory?.task.sorted(byKeyPath: "title", ascending: true)
@@ -49,14 +40,21 @@ class ToDoListViewController: UITableViewController {
         )
         let action = UIAlertAction(title: "Add a new task", style: .default) { action in
             
-            //            let newTask = Task(context: self.context)
-            //            newTask.title = textField.text
-            //            newTask.done = false
-            //            newTask.parentCategory = self.selectedCategory
-            //            self.tasks.append(newTask)
-            //            self.saveTask()
+            if let currentCategory = self.selectedCategory {
+                do {
+                    try self.realm.write {
+                        let newTask = Task()
+                        newTask.title = textField.text ?? ""
+                        currentCategory.task.append(newTask)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            } else {
+                
+            }
             self.tableView.reloadData()
-
+            
         }
         
         alert.addTextField { alertTextField in
@@ -91,8 +89,8 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        tasks[indexPath.row].done = !tasks[indexPath.row].done
-//        saveTask()
+        //        tasks[indexPath.row].done = !tasks[indexPath.row].done
+        //        saveTask()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
