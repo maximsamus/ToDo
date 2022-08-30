@@ -11,6 +11,7 @@ import RealmSwift
 class Task: Object {
     @objc dynamic var title = ""
     @objc dynamic var done = false
+    @objc dynamic var dateCreated: Date?
     var parentCategory = LinkingObjects(fromType: CategoryOfTasks.self, property: "task")
 }
 
