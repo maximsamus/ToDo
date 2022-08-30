@@ -89,29 +89,39 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //        tasks[indexPath.row].done = !tasks[indexPath.row].done
-        //        saveTask()
-        tableView.deselectRow(at: indexPath, animated: true)
+        if let task = tasks?[indexPath.row] {
+            do {
+                try realm.write {
+                    task.done = !task.done
+//                    realm.delete(task)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+            self.tableView.reloadData()
+            
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
 }
-// MARK: - Search Bar
-
-//extension ToDoListViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request: NSFetchRequest<Task> = Task.fetchRequest()
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        loadTask(with: request, predicate: predicate)
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 0 {
-//            loadTask()
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//        }
-//    }
-//}
+    // MARK: - Search Bar
+    
+    //extension ToDoListViewController: UISearchBarDelegate {
+    //
+    //    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    //        let request: NSFetchRequest<Task> = Task.fetchRequest()
+    //        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+    //        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    //
+    //        loadTask(with: request, predicate: predicate)
+    //    }
+    //
+    //    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    //        if searchBar.text?.count == 0 {
+    //            loadTask()
+    //            DispatchQueue.main.async {
+    //                searchBar.resignFirstResponder()
+    //            }
+    //        }
+    //    }
+    //}
