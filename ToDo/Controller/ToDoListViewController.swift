@@ -94,7 +94,7 @@ extension ToDoListViewController {
             do {
                 try realm.write {
                     task.done = !task.done
-//                    realm.delete(task)
+                    //                    realm.delete(task)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -105,22 +105,22 @@ extension ToDoListViewController {
         }
     }
 }
-    // MARK: - Search Bar
+// MARK: - Search Bar
+
+extension ToDoListViewController: UISearchBarDelegate {
     
-    extension ToDoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        tasks = tasks?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        tableView.reloadData()
+    }
     
-        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            
-            tasks = tasks?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
-            tableView.reloadData()
-        }
-    
-        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            if searchBar.text?.count == 0 {
-                loadTask()
-                DispatchQueue.main.async {
-                    searchBar.resignFirstResponder()
-                }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadTask()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
             }
         }
     }
+}
