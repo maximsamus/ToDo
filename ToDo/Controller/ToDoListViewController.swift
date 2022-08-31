@@ -24,7 +24,6 @@ class ToDoListViewController: UITableViewController {
     }
     
     private func loadTask() {
-        
         tasks = selectedCategory?.task.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
     }
@@ -68,8 +67,8 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true)
     }
 }
-// MARK: - Table View
 
+// MARK: - Table View
 extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -88,14 +87,12 @@ extension ToDoListViewController {
         return cell
     }
     // MARK: - Delegate Method didSelectRowAt
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let task = tasks?[indexPath.row] {
             do {
                 try realm.write {
                     task.done = !task.done
-                    //                    realm.delete(task)
                 }
             } catch {
                 print(error.localizedDescription)
