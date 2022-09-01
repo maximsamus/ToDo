@@ -84,7 +84,7 @@ extension CategoryViewController {
     }
 }
 
-// MARK: - Table View Data Source Methods
+// MARK: - Table View Segue Methods
 extension CategoryViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

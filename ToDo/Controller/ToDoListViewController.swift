@@ -7,9 +7,8 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
 
-class ToDoListViewController: UITableViewController {
+class ToDoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var tasks: Results<Task>?
@@ -19,10 +18,17 @@ class ToDoListViewController: UITableViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func updateModel(at indexPath: IndexPath) {
+        if let taskOfDeletion = self.tasks?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(taskOfDeletion)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
-    
     private func loadTask() {
         tasks = selectedCategory?.task.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
@@ -55,9 +61,7 @@ class ToDoListViewController: UITableViewController {
                 
             }
             self.tableView.reloadData()
-            
         }
-        
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "Please create a new task"
             textField = alertTextField
@@ -68,7 +72,7 @@ class ToDoListViewController: UITableViewController {
     }
 }
 
-// MARK: - Table View
+// MARK: - Table View Data Source Methods
 extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,8 +80,7 @@ extension ToDoListViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
-        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = tasks?[indexPath.row] {
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
@@ -86,7 +89,7 @@ extension ToDoListViewController {
         }
         return cell
     }
-    // MARK: - Delegate Method didSelectRowAt
+    //     MARK: - Delegate Method didSelectRowAt
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let task = tasks?[indexPath.row] {

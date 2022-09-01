@@ -15,11 +15,15 @@ class SwipeTableViewController: UITableViewController {
     func updateModel(at indexPath: IndexPath) {
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.rowHeight = 60.0
+    }
+    
     // MARK: - Table View Data Source Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? SwipeTableViewCell else { return UITableViewCell()}
-        //        cell.textLabel?.text = tasksCategories?[indexPath.row].name ?? "No categories added"
         cell.delegate = self
         return cell
     }
